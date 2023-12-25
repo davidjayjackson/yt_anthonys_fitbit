@@ -6,13 +6,9 @@ editor: visual
 
 ## Fitbit: Daily Data: Activity, Calories, Intensities,
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
-## Running Code
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
+```{r,echo=FALSE}
 library(tidyverse)
 library(lubridate)
 library(janitor)
@@ -21,34 +17,34 @@ library(janitor)
 
 ## Import Fitbit Data
 
-```{r}
+```{r,echo=FALSE}
 rm(list=ls())
 activity <- read_csv("./data/dailyActivity_merged.csv")
 activity$ActivityDate <-  lubridate::mdy(activity$ActivityDate)
-summary(activity$ActivityDate)
+summary(activity)
 ```
-```{r}
+```{r,echo=FALSE}
 calories <- read_csv("./data/dailyCalories_merged.csv") |>  rename(ActivityDate = ActivityDay)
 calories$ActivityDate <- mdy(calories$ActivityDate)
-summary(calories$ActivityDate)
+summary(calories)
 ```
-```{r}
+```{r,echo=FALSE}
 intensities <- read_csv("./data/dailyIntensities_merged.csv") |> rename(ActivityDate = ActivityDay)
 intensities$ActivityDate <-  mdy(intensities$ActivityDate) 
+summary(intensities)
 ```
-```{r}
+```{r, echo=FALSE}
 steps <- read_csv("./data/dailySteps_merged.csv") |> rename(ActivityDate = ActivityDay)
 steps$ActivityDate <- mdy(steps$ActivityDate) 
+summary(steps)
 ```
-
-
 
 ## Merge activity and calories data frames into one
 
-```{r}
+```{r,echo=FALSE}
 
 activity_calories <- activity |> inner_join(calories, by = c("ActivityDate", "Id")) |>
   inner_join(intensities, by = c("ActivityDate", "Id")) |>
   inner_join(steps, by = c("ActivityDate", "Id")) 
-
+summary(activity_calories)
 ```
