@@ -1,0 +1,54 @@
+---
+title: "AnthonyS Fitbit Questions"
+format: html
+editor: visual
+---
+
+## Fitbit: Daily Data: Activity, Calories, Intensities,
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+
+```
+
+## Import Fitbit Data
+
+```{r}
+rm(list=ls())
+activity <- read_csv("./data/dailyActivity_merged.csv")
+activity$ActivityDate <-  lubridate::mdy(activity$ActivityDate)
+summary(activity$ActivityDate)
+```
+```{r}
+calories <- read_csv("./data/dailyCalories_merged.csv") |>  rename(ActivityDate = ActivityDay)
+calories$ActivityDate <- mdy(calories$ActivityDate)
+summary(calories$ActivityDate)
+```
+```{r}
+intensities <- read_csv("./data/dailyIntensities_merged.csv") |> rename(ActivityDate = ActivityDay)
+intensities$ActivityDate <-  mdy(intensities$ActivityDate) 
+```
+```{r}
+steps <- read_csv("./data/dailySteps_merged.csv") |> rename(ActivityDate = ActivityDay)
+steps$ActivityDate <- mdy(steps$ActivityDate) 
+```
+
+
+
+## Merge activity and calories data frames into one
+
+```{r}
+
+activity_calories <- activity |> inner_join(calories, by = c("ActivityDate", "Id")) |>
+  inner_join(intensities, by = c("ActivityDate", "Id")) |>
+  inner_join(steps, by = c("ActivityDate", "Id")) 
+
+```
